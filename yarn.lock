@@ -5805,11 +5805,6 @@ kleur@^4.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-4.1.5.tgz#95106101795f7050c6c650f350c683febddb1780"
   integrity sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==
 
-koffi@^2.3.20:
-  version "2.3.20"
-  resolved "https://registry.yarnpkg.com/koffi/-/koffi-2.3.20.tgz#6ee4ace8ecdea6e1b3c91e95192fc7974684916a"
-  integrity sha512-y1W9JikdswM/CLmumtibnCknGJ6bmCNpWWD9G6WzP6Zj3lEY7d0J7jO82uMVoD1udz/2ZYUw2twhsGUGqeZH1g==
-
 lazy-val@^1.0.4, lazy-val@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/lazy-val/-/lazy-val-1.0.5.tgz#6cf3b9f5bc31cee7ee3e369c0832b7583dcd923d"
