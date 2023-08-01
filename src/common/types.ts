@@ -13,7 +13,7 @@ import { ChildProcess } from 'child_process'
 import type { HowLongToBeatEntry } from 'backend/wiki_game_info/howlongtobeat/utils'
 import { NileInstallInfo, NileInstallPlatform } from './types/nile'
 
-export type Runner = 'legendary' | 'gog' | 'sideload' | 'nile'
+export type Runner = 'legendary' | 'gog' | 'sideload' | 'nile' | 'steam'
 
 // NOTE: Do not put enum's in this module or it will break imports
 
@@ -124,7 +124,7 @@ export interface ExtraInfo {
 export type GameConfigVersion = 'auto' | 'v0' | 'v0.1'
 
 export interface GameInfo {
-  runner: 'legendary' | 'gog' | 'sideload' | 'nile'
+  runner: 'legendary' | 'gog' | 'sideload' | 'nile' | 'steam'
   store_url?: string
   app_name: string
   art_cover: string

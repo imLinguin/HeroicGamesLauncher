@@ -17,6 +17,7 @@ import {
   InstallInfo
 } from 'common/types'
 import { NileLoginData, NileRegisterData } from 'common/types/nile'
+import { SteamLoginUser } from 'common/types/steam'
 
 export type Category = 'all' | 'legendary' | 'gog' | 'sideload' | 'nile'
 
@@ -80,6 +81,10 @@ export interface ContextType {
     getLoginData: () => Promise<NileLoginData>
     login: (data: NileRegisterData) => Promise<string>
     logout: () => Promise<void>
+  }
+  steam: {
+    library: GameInfo[]
+    enabledUsers: SteamLoginUser[]
   }
   installingEpicGame: boolean
   allTilesInColor: boolean
@@ -194,6 +199,7 @@ export interface StoresFilters {
   legendary: boolean
   gog: boolean
   nile: boolean
+  steam: boolean
   sideload: boolean
 }
 

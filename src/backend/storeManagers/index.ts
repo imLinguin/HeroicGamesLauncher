@@ -7,6 +7,7 @@ import * as SideloadLibraryManager from 'backend/storeManagers/sideload/library'
 import * as GOGLibraryManager from 'backend/storeManagers/gog/library'
 import * as LegendaryLibraryManager from 'backend/storeManagers/legendary/library'
 import * as NileLibraryManager from 'backend/storeManagers/nile/library'
+import * as SteamLibraryManager from 'backend/storeManagers/steam/library'
 import { GameManager, LibraryManager } from 'common/types/game_manager'
 
 import { logInfo, RunnerToLogPrefixMap } from 'backend/logger/logger'
@@ -32,7 +33,8 @@ export const libraryManagerMap: LibraryManagerMap = {
   sideload: SideloadLibraryManager,
   gog: GOGLibraryManager,
   legendary: LegendaryLibraryManager,
-  nile: NileLibraryManager
+  nile: NileLibraryManager,
+  steam: SteamLibraryManager
 }
 
 function getDMElement(gameInfo: GameInfo, appName: string) {
@@ -81,4 +83,5 @@ export async function initStoreManagers() {
   await LegendaryLibraryManager.initLegendaryLibraryManager()
   await GOGLibraryManager.refresh()
   await NileLibraryManager.initNileLibraryManager()
+  await SteamLibraryManager.refresh()
 }

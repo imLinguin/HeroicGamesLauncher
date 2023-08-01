@@ -30,7 +30,8 @@ import {
   amazonCategories,
   epicCategories,
   gogCategories,
-  sideloadedCategories
+  sideloadedCategories,
+  steamCategories
 } from 'frontend/helpers/library'
 import RecentlyPlayed from './components/RecentlyPlayed'
 import { InstallModal } from './components'
@@ -57,6 +58,7 @@ export default React.memo(function Library(): JSX.Element {
     epic,
     gog,
     amazon,
+    steam,
     sideloadedLibrary,
     favouriteGames,
     libraryTopSection,
@@ -91,6 +93,7 @@ export default React.memo(function Library(): JSX.Element {
       legendary: epicCategories.includes(storedCategory),
       gog: gogCategories.includes(storedCategory),
       nile: amazonCategories.includes(storedCategory),
+      steam: steamCategories.includes(storedCategory),
       sideload: sideloadedCategories.includes(storedCategory)
     }
   }
@@ -520,6 +523,7 @@ export default React.memo(function Library(): JSX.Element {
     epic.library,
     gog.library,
     amazon.library,
+    steam.library,
     filterText,
     sortDescending,
     sortInstalled,
