@@ -129,6 +129,7 @@ export default React.memo(function GamePage(): JSX.Element | null {
   const isMac = platform === 'darwin'
   const isSideloaded = runner === 'sideload'
   const isBrowserGame = gameInfo?.install.platform === 'Browser'
+  const isSteam = runner === 'steam'
 
   const isInstalling = status === 'installing'
   const isPlaying = status === 'playing'
@@ -185,7 +186,7 @@ export default React.memo(function GamePage(): JSX.Element | null {
             : 'Windows')
 
         if (
-          runner !== 'sideload' &&
+          !['sideload', 'steam'].includes(runner) &&
           !notSupportedGame &&
           !notInstallable &&
           !isOffline
@@ -310,6 +311,7 @@ export default React.memo(function GamePage(): JSX.Element | null {
         queued: isQueued,
         reparing: isReparing,
         sideloaded: isSideloaded,
+        steam: isSteam,
         syncing: isSyncing,
         uninstalling: isUninstalling,
         updating: isUpdating,
@@ -540,6 +542,11 @@ export default React.memo(function GamePage(): JSX.Element | null {
   }
 
   async function handleInstall(is_installed: boolean) {
+    if (runner === 'steam') {
+      window.api.openExternalUrl(`steam://install/${appName}`)
+      return
+    }
+
     if (isQueued) {
       storage.removeItem(appName)
       return window.api.removeFromDMQueue(appName)

@@ -62,7 +62,7 @@ export async function getInstalledGames() {
         })
         try {
           const parsedManifest: AppManifest = parse(data).AppState
-          installed.set(parsedManifest.appid, {
+          installed.set(parsedManifest.appid.toString(), {
             ...parsedManifest,
             install_dir: path.join(
               steamApps,
@@ -130,7 +130,7 @@ export async function refresh(): Promise<null> {
       const newGameObject: GameInfo = {
         app_name: steamGame.appid.toString(),
         runner: 'steam',
-        art_square: `${steamDBBaseURL}/${steamGame.appid}/library_600x900_2x.jpg`,
+        art_square: `${steamDBBaseURL}/${steamGame.appid}/library_600x900.jpg`,
         art_cover: `${steamDBBaseURL}/${steamGame.appid}/header.jpg`,
         canRunOffline: false,
         title: steamGame.name,

@@ -4,6 +4,7 @@ import { ReactComponent as EpicLogo } from 'frontend/assets/epic-logo.svg'
 import { ReactComponent as GOGLogo } from 'frontend/assets/gog-logo.svg'
 import { ReactComponent as SideLoad } from 'frontend/assets/heroic-icon.svg'
 import { ReactComponent as AmazonLogo } from 'frontend/assets/amazon-logo.svg'
+import { ReactComponent as SteamLogo } from 'frontend/assets/steam-logo.svg'
 
 type Props = { runner: Runner; className?: string }
 
@@ -18,6 +19,8 @@ export default function StoreLogos({
       return <GOGLogo className={className} />
     case 'nile':
       return <AmazonLogo className={className} />
+    case 'steam':
+      return <SteamLogo className={className} />
     default:
       return <SideLoad className={className} />
   }
