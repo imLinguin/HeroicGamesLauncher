@@ -15,7 +15,7 @@ import {
 } from 'common/types/steam'
 import { libraryCache, steamEnabledUsers } from './electronStores'
 import { loadUsers } from './user'
-import { GameInfo } from 'common/types'
+import { GameInfo, InstallPlatform } from 'common/types'
 import { getGamesdbData } from '../gog/library'
 import { apiInfoCache } from '../gog/electronStores'
 
@@ -190,3 +190,5 @@ export async function runRunnerCommand() {
   logWarning(`runRunnerCommand not implemented on Steam Library Manager`)
   return null
 }
+
+export const getLaunchOptions = () => []
