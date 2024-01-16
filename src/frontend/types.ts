@@ -19,7 +19,7 @@ import {
 import { NileLoginData, NileRegisterData } from 'common/types/nile'
 import { SteamLoginUser } from 'common/types/steam'
 
-export type Category = 'all' | 'legendary' | 'gog' | 'sideload' | 'nile'
+export type Category = 'all' | 'legendary' | 'gog' | 'sideload' | 'steam' | 'nile'
 
 export interface ContextType {
   error: boolean

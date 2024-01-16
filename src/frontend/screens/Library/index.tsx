@@ -344,6 +344,9 @@ export default React.memo(function Library(): JSX.Element {
       amazon.library.forEach((game) => {
         if (favouriteAppNames.includes(game.app_name)) tempArray.push(game)
       })
+      steam.library.forEach((game) => {
+        if (favouriteAppNames.includes(game.app_name)) tempArray.push(game)
+      })
     }
     return tempArray.sort((a, b) => {
       const gameA = a.title.toUpperCase().replace('THE ', '')
@@ -377,6 +380,9 @@ export default React.memo(function Library(): JSX.Element {
     if (storesFilters['sideload']) {
       displayedStores.push('sideload')
     }
+    if (storesFilters['steam'] && steam.enabledUsers.length > 0) {
+      displayedStores.push('steam')
+    }
 
     if (!displayedStores.length) {
       displayedStores = Object.keys(storesFilters)
@@ -385,14 +391,16 @@ export default React.memo(function Library(): JSX.Element {
     const showEpic = epic.username && displayedStores.includes('legendary')
     const showGog = gog.username && displayedStores.includes('gog')
     const showAmazon = amazon.user_id && displayedStores.includes('nile')
+    const showSteam = steam.enabledUsers.length > 0 && displayedStores.includes('steam')
     const showSideloaded = displayedStores.includes('sideload')
 
     const epicLibrary = showEpic ? epic.library : []
     const gogLibrary = showGog ? gog.library : []
     const sideloadedApps = showSideloaded ? sideloadedLibrary : []
     const amazonLibrary = showAmazon ? amazon.library : []
+    const steamLibrary = showSteam ? steam.library : []
 
-    return [...sideloadedApps, ...epicLibrary, ...gogLibrary, ...amazonLibrary]
+    return [...sideloadedApps, ...epicLibrary, ...gogLibrary, ...amazonLibrary, ...steamLibrary]
   }
 
   // select library

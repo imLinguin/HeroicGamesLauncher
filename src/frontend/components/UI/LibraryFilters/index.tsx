@@ -10,12 +10,13 @@ const RunnerToStore = {
   legendary: 'Epic Games',
   gog: 'GOG',
   nile: 'Amazon Games',
-  sideload: 'Other'
+  sideload: 'Other',
+  steam: 'Steam'
 }
 
 export default function LibraryFilters() {
   const { t } = useTranslation()
-  const { platform, epic, gog, amazon } = useContext(ContextProvider)
+  const { platform, epic, gog, amazon, steam } = useContext(ContextProvider)
   const {
     setShowFavourites,
     setShowHidden,
@@ -75,7 +76,8 @@ export default function LibraryFilters() {
       legendary: false,
       gog: false,
       nile: false,
-      sideload: false
+      sideload: false,
+      steam: false
     }
     newFilters = { ...newFilters, [store]: true }
     setStoresFilters(newFilters)
@@ -116,6 +118,7 @@ export default function LibraryFilters() {
 
   // t('Epic Games', 'Epic Games')
   // t('GOG', 'GOG')
+  // t('Steam', 'Steam')
   // t('Amazon Games', 'Amazon Games')
   // t('Other', 'Other')
   const storeToggle = (store: Category) => {
@@ -139,6 +142,7 @@ export default function LibraryFilters() {
       legendary: true,
       gog: true,
       nile: true,
+      steam: true,
       sideload: true
     })
     setPlatformsFilters({
@@ -160,6 +164,7 @@ export default function LibraryFilters() {
         {epic.username && storeToggle('legendary')}
         {gog.username && storeToggle('gog')}
         {amazon.username && storeToggle('nile')}
+        {steam.enabledUsers.length > 0 && storeToggle('steam')}
         {storeToggle('sideload')}
 
         <hr />
