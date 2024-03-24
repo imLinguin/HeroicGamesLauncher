@@ -1,0 +1,80 @@
+ electron-builder.yml |  3 ---
+ package.json         |  2 +-
+ src/backend/main.ts  | 12 ------------
+ yarn.lock            |  5 +++--
+ 4 files changed, 4 insertions(+), 18 deletions(-)
+
+diff --git a/electron-builder.yml b/electron-builder.yml
+index 6ab663ea..d00bc0a1 100644
+--- a/electron-builder.yml
++++ b/electron-builder.yml
+@@ -16,9 +16,6 @@ asarUnpack:
+   - build/icon-light.png
+   - build/webviewPreload.js
+ 
+-electronDownload:
+-  mirror: https://github.com/castlabs/electron-releases/releases/download/v
+-
+ protocols:
+   - name: heroic
+     schemes:
+diff --git a/package.json b/package.json
+index cd2bd305..8b6f6e7f 100644
+--- a/package.json
++++ b/package.json
+@@ -124,7 +124,7 @@
+     "@typescript-eslint/parser": "5.47.1",
+     "@vitejs/plugin-react-swc": "3.2.0",
+     "cross-env": "7.0.3",
+-    "electron": "castlabs/electron-releases#29.1.3+wvcus",
++    "electron": "29.1.3",
+     "electron-builder": "24.6.4",
+     "electron-devtools-installer": "3.2.0",
+     "eslint": "8.36.0",
+diff --git a/src/backend/main.ts b/src/backend/main.ts
+index ae5e5a82..dca61099 100644
+--- a/src/backend/main.ts
++++ b/src/backend/main.ts
+@@ -19,7 +19,6 @@ import {
+   protocol,
+   screen,
+   clipboard,
+-  components,
+   session
+ } from 'electron'
+ import 'backend/updater'
+@@ -320,17 +319,6 @@ if (!gotTheLock) {
+       )
+     }
+ 
+-    if (!process.env.CI) {
+-      await components.whenReady().catch((e) => {
+-        logError([
+-          'Failed to download / update DRM components.',
+-          'Make sure you do not block update.googleapis.com domain if you want to use WideVine in Browser sideloaded apps',
+-          e
+-        ])
+-      })
+-      logInfo(['DRM module staus', components.status()])
+-    }
+-
+     // try to fix notification app name on windows
+     if (isWindows) {
+       app.setAppUserModelId('Heroic Games Launcher')
+diff --git a/yarn.lock b/yarn.lock
+index a6d51295..df27e0bf 100644
+--- a/yarn.lock
++++ b/yarn.lock
+@@ -3654,9 +3654,10 @@ electron-updater@5.0.1:
+     lodash.isequal "^4.5.0"
+     semver "^7.3.5"
+ 
+-electron@castlabs/electron-releases#29.1.3+wvcus:
++electron@29.1.3:
+   version "29.1.3"
+-  resolved "https://codeload.github.com/castlabs/electron-releases/tar.gz/11c396ff7aa05e8fd8049193b58684f119cc0b8d"
++  resolved "https://registry.yarnpkg.com/electron/-/electron-29.1.3.tgz#bd127c6c5bef03ca2cf4595480b8db7e4f111dbe"
++  integrity sha512-E+ZDRlrVQp4lRxVpK8uTaiHZ8CgjpZEs3gvhFOfbnUGHRHQ6FpPOBZQpQUx84JimOFSaz/KP6Jm2x4TFgoN56A==
+   dependencies:
+     "@electron/get" "^2.0.0"
+     "@types/node" "^20.9.0"
