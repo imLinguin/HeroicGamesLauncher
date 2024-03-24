@@ -1,0 +1,23 @@
+name: Build ARM64 Linux
+on: workflow_dispatch
+
+
+jobs:
+  build:
+      runs-on: ubuntu-22.04
+      env:
+        npm_config_arch: arm64
+      steps:
+        - uses: actions/checkout@v3
+        - name: Apply patch
+          run: git apply ./patches/001-arm64.patch
+        - uses: ./.github/actions/install-deps
+
+        - name: Package
+          run: yarn dist:linux appimage --arm64
+
+        - name: Upload built version
+          uses: actions/upload-artifact@v3
+          with:
+            path: ./dist/Heroic*.AppImage
+
