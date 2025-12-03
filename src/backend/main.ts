@@ -113,10 +113,6 @@ import {
 } from './storeManagers'
 import { updateWineVersionInfos } from './wine/manager/utils'
 import { addNewApp } from './storeManagers/sideload/library'
-import {
-  getGameOverride,
-  getGameSdl
-} from 'backend/storeManagers/legendary/library'
 import { backendEvents } from './backend_events'
 import { configStore } from './constants/key_value_stores'
 import {
@@ -665,8 +661,6 @@ addHandler('getMaxCpus', () => cpus().length)
 
 addHandler('getHeroicVersion', app.getVersion)
 addHandler('isFullscreen', () => isSteamDeckGameMode || isCLIFullscreen)
-addHandler('getGameOverride', async () => getGameOverride())
-addHandler('getGameSdl', async (event, appName) => getGameSdl(appName))
 
 addHandler('showUpdateSetting', () => !isFlatpak)
 

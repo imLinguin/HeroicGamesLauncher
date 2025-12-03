@@ -4,6 +4,7 @@ import InstallCommand from './install'
 import LaunchCommand from './launch'
 import ListCommand from './list'
 import InfoCommand from './info'
+import InstallSize from './install_size'
 import MoveCommand from './move'
 import SyncSavesCommand from './sync_saves'
 import StatusCommand from './status'
@@ -43,4 +44,5 @@ export type LegendaryCommand = BaseLegendaryCommand &
     | CleanupCommand
     | AuthCommand
     | EglSyncCommand
+    | InstallSize
   )

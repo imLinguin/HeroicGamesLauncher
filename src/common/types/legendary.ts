@@ -167,9 +167,8 @@ interface GameManifest {
   num_chunks: number
   num_files: number
   prerequisites?: Prerequisite
+  install_components?: InstallComponent[]
   size: number
-  tag_disk_size: TagInfo[]
-  tag_download_size: TagInfo[]
   type: 'binary'
   version: number
 }
@@ -181,13 +180,20 @@ interface Prerequisite {
   path: string
 }
 
-interface TagInfo {
-  // The tag this info describes
-  tag: string
-  // How many files are included in this tag
-  count: number
-  // How big the tag is (in bytes)
-  size: number
+export interface InstallComponent {
+  UniqueId: string
+  Title: string
+  Description: string
+  IsRequired: boolean
+  IsDefaultSelected: boolean
+  ConfigHandler?: string
+  Children?: InstallComponentChild[]
+}
+
+export interface InstallComponentChild {
+  Title: string
+  UniqueId: string
+  ConfigValue: string
 }
 
 // types for the Legendary API https://heroic.legendary.gl/v1/version.json
@@ -235,11 +241,4 @@ export type ResponseDataLegendaryAPI = {
   legendary_config: LegendaryConfig
   // release_info: ReleaseInfoLegendaryAPI
   runtimes: unknown[]
-}
-
-export interface SelectiveDownload {
-  tags: Array<string>
-  name: string
-  description: string
-  required?: boolean
 }

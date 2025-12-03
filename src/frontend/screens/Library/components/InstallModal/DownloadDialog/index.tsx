@@ -15,7 +15,7 @@ import {
   WineInstallation
 } from 'common/types'
 import {
-  SelectiveDownload,
+  InstallComponent,
   DLCInfo as LegendaryDLCInfo
 } from 'common/types/legendary'
 import { BuildItem, DLCInfo as GOGDLCInfo } from 'common/types/gog'
@@ -75,13 +75,6 @@ type DiskSpaceInfo = {
 
 const storage: Storage = window.localStorage
 
-function getUniqueKey(sdl: SelectiveDownload) {
-  if (sdl.tags) {
-    return sdl.tags.join(',')
-  }
-  return ''
-}
-
 const userHome = configStore.get('userHome', '')
 
 function getDefaultInstallPath() {
@@ -134,7 +127,7 @@ export default function DownloadDialog({
   )[0]
 
   const [dlcsToInstall, setDlcsToInstall] = useState<string[]>([])
-  const [sdls, setSdls] = useState<SelectiveDownload[]>([])
+  const [sdls, setSdls] = useState<InstallComponent[]>([])
   const [selectedSdls, setSelectedSdls] = useState<{ [key: string]: boolean }>(
     {}
   )
@@ -161,10 +154,15 @@ export default function DownloadDialog({
     const list = []
     if (haveSDL) {
       for (const sdl of sdls) {
-        if (sdl.required || selectedSdls[getUniqueKey(sdl)]) {
-          if (Array.isArray(sdl.tags)) {
-            list.push(...sdl.tags)
-          }
+        if (sdl.Children?.length) {
+          sdl.Children.forEach(
+            (child) =>
+              !!selectedSdls[child.UniqueId] && list.push(child.UniqueId)
+          )
+          continue
+        }
+        if (sdl.IsRequired || selectedSdls[sdl.UniqueId]) {
+          list.push(sdl.UniqueId)
         }
       }
     }
@@ -182,10 +180,10 @@ export default function DownloadDialog({
   }, [])
 
   const handleSdl = useCallback(
-    (sdl: SelectiveDownload, value: boolean) => {
+    (id: string, value: boolean) => {
       setSelectedSdls({
         ...selectedSdls,
-        [getUniqueKey(sdl)]: value
+        [id]: value
       })
     },
     [selectedSdls]
@@ -400,6 +398,18 @@ export default function DownloadDialog({
 
           if (
             gameInstallInfo.manifest &&
+            'install_components' in gameInstallInfo.manifest
+          ) {
+            setSdls(gameInstallInfo.manifest.install_components || [])
+            gameInstallInfo.manifest.install_components?.forEach(
+              (component) =>
+                component.IsDefaultSelected &&
+                handleSdl(component.UniqueId, true)
+            )
+          }
+
+          if (
+            gameInstallInfo.manifest &&
             'game' in gameInstallInfo &&
             'branches' in gameInstallInfo.game
           ) {
@@ -426,21 +436,6 @@ export default function DownloadDialog({
     branch,
     savedBranchPassword
   ])
-
-  useEffect(() => {
-    const getGameSdl = async () => {
-      if (runner === 'legendary') {
-        const { sdl_config } = await window.api.getGameOverride()
-        if (sdl_config && sdl_config[appName]) {
-          const sdl = await window.api.getGameSdl(appName)
-          if (sdl.length > 0) {
-            setSdls(sdl)
-          }
-        }
-      }
-    }
-    getGameSdl()
-  }, [appName, runner])
 
   useEffect(() => {
     const getSpace = async () => {
@@ -745,21 +740,45 @@ export default function DownloadDialog({
         )}
         {haveSDL && (
           <div className="InstallModal__sdls">
-            {sdls.map((sdl: SelectiveDownload, idx: number) => (
-              <label
-                key={sdl.name}
-                className="InstallModal__toggle toggleWrapper"
-              >
-                <ToggleSwitch
-                  htmlId={`sdls-${idx}`}
-                  title={sdl.name}
-                  extraClass="InstallModal__toggle--sdl"
-                  value={!!sdl.required || !!selectedSdls[getUniqueKey(sdl)]}
-                  disabled={sdl.required}
-                  handleChange={(e) => handleSdl(sdl, e.target.checked)}
-                />
-              </label>
-            ))}
+            {sdls.map((sdl: InstallComponent) =>
+              sdl.Children?.length ? (
+                <details open={true} key={sdl.Title}>
+                  <summary>{sdl.Title}</summary>
+                  {sdl.Children.map((child) => (
+                    <label
+                      key={child.Title}
+                      className="InstallModal__toggle toggleWrapper"
+                    >
+                      <ToggleSwitch
+                        htmlId={`sdls-${child.UniqueId}`}
+                        title={child.Title}
+                        extraClass="InstallModal__toggle--sdl"
+                        value={!!selectedSdls[child.UniqueId]}
+                        handleChange={(e) =>
+                          handleSdl(child.UniqueId, e.target.checked)
+                        }
+                      />
+                    </label>
+                  ))}
+                </details>
+              ) : (
+                <label
+                  key={sdl.Title}
+                  className="InstallModal__toggle toggleWrapper"
+                >
+                  <ToggleSwitch
+                    htmlId={`sdls-${sdl.UniqueId}`}
+                    title={sdl.Title}
+                    extraClass="InstallModal__toggle--sdl"
+                    value={!!sdl.IsRequired || !!selectedSdls[sdl.UniqueId]}
+                    disabled={sdl.IsRequired}
+                    handleChange={(e) =>
+                      handleSdl(sdl.UniqueId, e.target.checked)
+                    }
+                  />
+                </label>
+              )
+            )}
           </div>
         )}
         {showDlcSelector && (

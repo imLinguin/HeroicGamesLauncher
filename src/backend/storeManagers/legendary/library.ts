@@ -12,18 +12,14 @@ import {
   InstalledJsonMetadata,
   GameMetadata,
   LegendaryInstallInfo,
-  LegendaryInstallPlatform,
-  ResponseDataLegendaryAPI,
-  SelectiveDownload,
-  GameOverride
+  LegendaryInstallPlatform
 } from 'common/types/legendary'
 import { LegendaryUser } from './user'
 import {
   formatEpicStoreUrl,
   getLegendaryBin,
   isEpicServiceOffline,
-  getFileSize,
-  axiosClient
+  getFileSize
 } from '../../utils'
 import {
   logDebug,
@@ -32,11 +28,7 @@ import {
   LogPrefix,
   logWarning
 } from 'backend/logger'
-import {
-  gamesOverrideStore,
-  installStore,
-  libraryStore
-} from './electronStores'
+import { installStore, libraryStore } from './electronStores'
 import { callRunner } from '../../launcher'
 import { dirname, join } from 'path'
 import { isOnline } from 'backend/online_monitor'
@@ -705,67 +697,6 @@ export async function runRunnerCommand(
   )
 }
 
-export async function getGameOverride(): Promise<GameOverride> {
-  const cached = gamesOverrideStore.get('gamesOverride')
-  if (cached) {
-    return cached
-  }
-
-  try {
-    const response = await axiosClient.get<ResponseDataLegendaryAPI>(
-      'https://heroic.legendary.gl/v1/version.json'
-    )
-
-    if (response.data.game_overrides) {
-      gamesOverrideStore.set('gamesOverride', response.data.game_overrides)
-    }
-
-    return response.data.game_overrides
-  } catch (error) {
-    logWarning(['Error fetching Legendary API:', error], LogPrefix.Legendary)
-    throw error
-  }
-}
-
-export async function getGameSdl(
-  appName: string
-): Promise<SelectiveDownload[]> {
-  try {
-    const response = await axiosClient.get<Record<string, SelectiveDownload>>(
-      `https://heroic.legendary.gl/v1/sdl/${appName}.json`
-    )
-
-    // if data type is not a json return empty array
-    if (response.headers['content-type'] !== 'application/json') {
-      logInfo(
-        ['No Selective Download data found for', appName],
-        LogPrefix.Legendary
-      )
-      return []
-    }
-
-    const list = Object.keys(response.data)
-    const sdlList: SelectiveDownload[] = []
-
-    list.forEach((key) => {
-      const { name, description, tags } = response.data[key]
-      if (key === '__required') {
-        sdlList.unshift({ name, description, tags, required: true })
-      } else {
-        sdlList.push({ name, description, tags })
-      }
-    })
-
-    return sdlList
-  } catch (error) {
-    logWarning(
-      ['Error fetching Selective Download data for', appName, error],
-      LogPrefix.Legendary
-    )
-    return []
-  }
-}
-
 /**
  * Toggles the EGL synchronization on/off based on arguments
  * @param path_or_action On Windows: "unlink" (turn off), "windows" (turn on). On linux/mac: "unlink" (turn off), any other string (prefix path)
@@ -831,9 +762,8 @@ export function commandToArgsArray(command: LegendaryCommand): string[] {
     case 'install':
       commandParts.push(command.appName)
       if (command.sdlList) {
-        commandParts.push('--install-tag=')
         for (const sdlTag of command.sdlList)
-          commandParts.push('--install-tag', sdlTag)
+          commandParts.push('--install-component', sdlTag)
       }
       break
     case 'launch':
